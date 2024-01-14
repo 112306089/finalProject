@@ -16,20 +16,27 @@ public class Tester {
     	
     	
     	if(type.equals("飲料")) {
-    		
+    		System.out.println("請用想喝哪種類型的飲料呢？輸入（手搖/咖啡廳/果汁）");
+    	    String category = sc.next();
+    	    Drink drink = new Drink(budget, location, category);
+    	    drink.costOfTheDrink();
+    	    System.out.println("以下是附近符合您需求的飲料店：");
+    	    drink.whereToHaveMeal();
     		
     	}else if(type.equals("餐盒")) {
     		LunchBox meal = new LunchBox(budget, location, type);
     		meal.setType("餐盒");
     		meal.costOfTheMeal();
-    		try {
-                System.out.println("以下是附近符合您需求的餐廳：");
-                System.out.println(meal.getRecommendedRestaurants());
-            } catch (Exception e) {
-                System.out.println("An error occurred: " + e.getMessage());
-            }
+    		
+            System.out.println("以下是附近符合您需求的餐廳：");
+            meal.whereToHaveMeal();
+            
     	}else if(type.equals("正餐")) {
     		System.out.println("請問想吃甚麼類型的正餐呢？輸入（台式/中式/韓式/日式/蔬食/自助餐/異國/速食");
+    	    String foodType=sc.next();
+    	    Type typeOfFood=new Type(budget,location,foodType);
+    	    typeOfFood.costOfTheMeal();
+    	    typeOfFood.whereToHaveMeal();
     	}
     	
     	

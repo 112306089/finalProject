@@ -7,50 +7,61 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Meal {
+
 	private int budget;
 	private String location;
 
-	ArrayList<String> list = new ArrayList<String>(); //這裡是將excel第一列的值放進去的陣列
-	ArrayList<String> list1 = new ArrayList<String>();//這裡是將excel第三列的值放進去的陣列，以此類推
-	ArrayList<String> list2 = new ArrayList<String>();
-	ArrayList<String> list3 = new ArrayList<String>();
-	ArrayList<String> list4 = new ArrayList<String>();
-	ArrayList<String> list5 = new ArrayList<String>();
-	ArrayList<String> list6 = new ArrayList<String>();
-	ArrayList<String> list7 = new ArrayList<String>();
+	private ArrayList<String> list = new ArrayList<String>();
+	private ArrayList<String> list1 = new ArrayList<String>();
+	private ArrayList<String> list2 = new ArrayList<String>();
+	private ArrayList<String> list3 = new ArrayList<String>();
+	private ArrayList<String> list4 = new ArrayList<String>();
+	private ArrayList<String> list5 = new ArrayList<String>();
+	private ArrayList<String> list6 = new ArrayList<String>();
+	private ArrayList<String> list7 = new ArrayList<String>();
 
-	private ArrayList<ArrayList<String>> restaurant = new ArrayList<>(); //會這樣寫是因為要將上面的list丟進去排成一個2*n的陣列
-	private ArrayList<ArrayList<String>> restaurant1 = new ArrayList<>(); //如果你們知道更好的寫法也可以跟我說，有時間會改一下
+	private ArrayList<ArrayList<String>> restaurant = new ArrayList<>();
+	private ArrayList<ArrayList<String>> restaurant1 = new ArrayList<>();
 	private ArrayList<ArrayList<String>> restaurant2 = new ArrayList<>();
 	private ArrayList<ArrayList<String>> restaurant3 = new ArrayList<>();
+	
 
 	public Meal(int budget, String location) {
 		this.budget = budget;
 		this.location = location;
 	}
+	
+	public int getBudget() {
+		return budget;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
 
 	public void costOfTheMeal() {
 
 		try {
-			FileInputStream fis = new FileInputStream(new File("C:/Users/Cindy/eclipse-workspace/Final1229/餐廳.xlsx")); // 讀取檔案
+			FileInputStream fis = new FileInputStream(new File("C:/Users/Cindy/eclipse-workspace/Final1229/餐廳.xlsx"));
 
-			XSSFWorkbook wb = new XSSFWorkbook(fis); // 新建一個.xlsx檔的工作簿
+			XSSFWorkbook wb = new XSSFWorkbook(fis); // Create a new Excel workbook file (.xlsx)
 
-			XSSFSheet sheet = wb.getSheetAt(0); // 新建工作表
+			XSSFSheet sheet = wb.getSheetAt(0); // Create a new worksheet
 
-			Row secondRow = sheet.getRow(1); // 從工作表中取得第二列
+			Row secondRow = sheet.getRow(1); // Get the second row from worksheet
 
-			for (int i = 0; i < secondRow.getLastCellNum(); i++) { // getLastCellNum為取得最後一個單元格的編碼
-				Cell cell = secondRow.getCell(i); // 取得第二列的單元格
+			for (int i = 0; i < secondRow.getLastCellNum(); i++) {
+				Cell cell = secondRow.getCell(i); // Get each cell of second row
 
-				if (cell.getNumericCellValue() <= 70 && cell.getNumericCellValue() >= 50) { // getNumericCellValue為將單元格的值設為數字
+				if (cell.getNumericCellValue() <= 70 && cell.getNumericCellValue() >= 50) {
 					Row firstRow = sheet.getRow(0);
 					Row thirdRow = sheet.getRow(2);
 
 					Cell firstRowCell = firstRow.getCell(i);
 					Cell thirdRowCell = thirdRow.getCell(i);
 
-					list.add(firstRowCell.getStringCellValue()); // getStringValue為將單元格的值設為字串
+					list.add(firstRowCell.getStringCellValue()); // put the row which conform to the condition into
+																	// array
 					list1.add(thirdRowCell.getStringCellValue());
 
 				} else if (cell.getNumericCellValue() <= 100 && cell.getNumericCellValue() > 70) {
@@ -93,11 +104,11 @@ public class Meal {
 			ArrayList<String> combinedList = new ArrayList<>(list);
 			combinedList.addAll(list2);
 
-			ArrayList<String> combinedList1 = new ArrayList<>(list1); // 這裡會需要這樣將陣列加進去是因為前面的條件只會篩選像是70-100之間的餐廳，
-			combinedList1.addAll(list3);// 70以下的就不會有，我不知道有沒有其他比較好的方式能將100以下的都加進陣列中所以就這樣寫
-			
-			restaurant1.add(combinedList); 
-			restaurant1.add(combinedList1);
+			ArrayList<String> combinedList1 = new ArrayList<>(list1);
+			combinedList1.addAll(list3);
+
+			restaurant1.add(combinedList); // construct a 2D array
+			restaurant1.add(combinedList1); // construct a 2D array
 
 			ArrayList<String> combinedList2 = new ArrayList<>(combinedList);
 			combinedList2.addAll(list4);
@@ -123,44 +134,47 @@ public class Meal {
 	}
 
 	public void whereToHaveMeal() {
+		boolean locationFound = false;
+
 		if (budget <= 70 && budget >= 50) {
 			for (int j = 0; j < restaurant.get(1).size(); j++) {
 				if (restaurant.get(1).get(j).equals(location)) {
-					System.out.println(restaurant.get(0).get(j));
-				} else {
-					System.out.println("Out of the area");
-					break;
+					System.out.println(restaurant.get(0).get(j)); // print out the restaurants which is in that area and
+																	// fit within the budget
+					locationFound = true;
 				}
 			}
 		} else if (budget > 70 && budget <= 100) {
 			for (int j = 0; j < restaurant1.get(1).size(); j++) {
 				if (restaurant1.get(1).get(j).equals(location)) {
 					System.out.println(restaurant1.get(0).get(j));
-				} else {
-					System.out.println("Out of the area");
-					break;
+					locationFound = true;
 				}
 			}
 		} else if (budget > 100 && budget <= 200) {
 			for (int j = 0; j < restaurant2.get(1).size(); j++) {
 				if (restaurant2.get(1).get(j).equals(location)) {
 					System.out.println(restaurant2.get(0).get(j));
-				} else {
-					System.out.println("Out of the area");
-					break;
+					locationFound = true;
 				}
 			}
 		} else if (budget > 200) {
 			for (int j = 0; j < restaurant3.get(1).size(); j++) {
 				if (restaurant3.get(1).get(j).equals(location)) {
 					System.out.println(restaurant3.get(0).get(j));
-				} else {
-					System.out.println("Out of the area");
-					break;
+					locationFound = true;
 				}
 			}
 		} else {
 			System.out.println("There is nothing you can eat");
 		}
+
+		if (!locationFound && budget >= 70) {
+			System.out.println("Out of area");
+		}
+		
 	}
+	
+	
+
 }
